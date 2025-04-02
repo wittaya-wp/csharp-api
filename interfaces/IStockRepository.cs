@@ -9,7 +9,7 @@ namespace api.interfaces
 {
     public interface IStockRepository
     {
-        Task<List<Stock>> GetAllASync();
+        Task<List<StockDto>> GetAllASync();
         Task<Stock?> GetByIdAsync(int id);
         Task<Stock> CreateAync(Stock stockModel);
         Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto stockDto);

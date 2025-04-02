@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Stock;
 using api.interfaces;
+using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
@@ -39,9 +40,10 @@ namespace api.Repository
             return stock;
         }
 
-        public async Task<List<Stock>> GetAllASync()
+        public async Task<List<StockDto>> GetAllASync()
         {
-            return await _context.Stocks.ToListAsync();
+            return await _context.Stocks.Select(s => s.ToStockDto()).ToListAsync();
+
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
