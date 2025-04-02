@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
+using api.interfaces;
+using api.Repository;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 
 var app = builder.Build();
 
