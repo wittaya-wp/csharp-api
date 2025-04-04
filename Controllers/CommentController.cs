@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Dtos.Comments;
 using api.interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -67,6 +68,20 @@ namespace api.Controllers
             }
 
             return Ok(comment.ToCommentDto());
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var result = await _commentRepo.DeleteAsync(id);
+
+            if (result == null)
+            {
+                return NotFound("comment not found with this id");
+            }
+
+            return Ok(result);
         }
     }
 }
