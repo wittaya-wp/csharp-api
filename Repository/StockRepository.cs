@@ -41,15 +41,15 @@ namespace api.Repository
             return stock;
         }
 
-        // public async Task<List<StockDto>> GetAllASync()
-        // {
-        //     return await _context.Stocks.Include(c => c.Comments).Select(s => s.ToStockDto()).ToListAsync();
-
-        // }
+        public async Task<List<StockDto>> GetAllASync()
+        {
+            return await _context.Stocks.Include(c => c.Comments).Select(s => s.ToStockDto()).ToListAsync();
+        }
 
         public async Task<List<Stock>> GetAllASync(QueryObject query)
         {
             var stocks = _context.Stocks.Include(c => c.Comments).AsQueryable();
+
             if (!string.IsNullOrWhiteSpace(query.CompanyName))
             {
                 stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
@@ -58,6 +58,14 @@ namespace api.Repository
             if (!string.IsNullOrWhiteSpace(query.Symbol))
             {
                 stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                {
+                    stocks = query.IsDecsending ? stocks.OrderByDescending(s => s.Symbol) : stocks.OrderBy(s => s.Symbol);
+                }
             }
 
             return await stocks.ToListAsync();
