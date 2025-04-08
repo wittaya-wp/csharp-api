@@ -42,18 +42,6 @@ namespace api.Controllers
             return Ok(comment.ToCommentDto());
         }
 
-        // [HttpGet("{id:string}")]
-        // public async Task<IActionResult> GetById([FromRoute] string id)
-        // {
-        //     var comment = await _commentRepo.GetByIdAsync(Convert.ToInt32(id));
-        //     if (comment == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     return Ok(comment.ToCommentDto());
-        // }
-
         [HttpPost("{stockId:int}")]
         public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentRquestDto commentDto)
         {
