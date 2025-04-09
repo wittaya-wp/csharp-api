@@ -8,13 +8,11 @@ namespace api.Data
     public class ApplicationDBContext : IdentityDbContext<AppUser>
     {
         public ApplicationDBContext(DbContextOptions dbContextOptions)
-        : base(dbContextOptions)
-        {
-
-        }
+            : base(dbContextOptions) { }
 
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Comment> Comments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -22,16 +20,16 @@ namespace api.Data
             [
                 new IdentityRole
                 {
-                    Id="1",
-                    Name="Admin",
-                    NormalizedName = "ADMIN"
+                    Id = "1",
+                    Name = "Admin",
+                    NormalizedName = "ADMIN",
                 },
                 new IdentityRole
                 {
-                    Id="2",
-                    Name="User",
-                    NormalizedName="USER"
-                }
+                    Id = "2",
+                    Name = "User",
+                    NormalizedName = "USER",
+                },
             ];
             builder.Entity<IdentityRole>().HasData(roles);
         }
