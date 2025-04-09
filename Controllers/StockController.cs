@@ -1,20 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.Data;
 using api.Dtos.Stock;
 using api.Helpers;
 using api.interfaces;
 using api.Mappers;
-using api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class StockController : ControllerBase
     {
         private readonly IStockRepository _stockRepo;
@@ -65,7 +60,10 @@ namespace api.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
+        public async Task<IActionResult> Update(
+            [FromRoute] int id,
+            [FromBody] UpdateStockRequestDto updateDto
+        )
         {
             if (!ModelState.IsValid)
             {
@@ -95,6 +93,5 @@ namespace api.Controllers
 
             return NoContent();
         }
-
     }
 }

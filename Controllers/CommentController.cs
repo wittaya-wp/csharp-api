@@ -1,21 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Dtos.Comments;
 using api.interfaces;
 using api.Mappers;
-using Microsoft.AspNetCore.Http.Timeouts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepo;
         private readonly IStockRepository _stockRepo;
+
         public CommentController(ICommentRepository commentRepo, IStockRepository stockRepo)
         {
             _commentRepo = commentRepo;
@@ -43,7 +41,10 @@ namespace api.Controllers
         }
 
         [HttpPost("{stockId:int}")]
-        public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentRquestDto commentDto)
+        public async Task<IActionResult> Create(
+            [FromRoute] int stockId,
+            CreateCommentRquestDto commentDto
+        )
         {
             if (!ModelState.IsValid)
             {
@@ -58,12 +59,19 @@ namespace api.Controllers
             var commentModel = commentDto.ToCommentFromCreate(stockId);
             await _commentRepo.CreateAsync(commentModel);
 
-            return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.ToCommentDto());
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = commentModel.Id },
+                commentModel.ToCommentDto()
+            );
         }
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> Update([FromBody] UpdateCommentRequestDto commentDto, int id)
+        public async Task<IActionResult> Update(
+            [FromBody] UpdateCommentRequestDto commentDto,
+            int id
+        )
         {
             if (!ModelState.IsValid)
             {
