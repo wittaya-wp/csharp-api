@@ -1,7 +1,5 @@
 using api.Data;
-using api.Dtos.Comments;
 using api.interfaces;
-using api.Mappers;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 

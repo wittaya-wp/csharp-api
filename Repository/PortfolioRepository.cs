@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Data;
 using api.interfaces;
 using api.Models;
@@ -28,7 +24,8 @@ namespace api.Repository
         public async Task<Portfolio?> DeletePortfolio(AppUser user, string symbol)
         {
             var portfolioModel = await _context.Portfolios.FirstOrDefaultAsync(x =>
-                x.AppUserId == user.Id && x.Stock.Symbol.ToLower() == symbol.ToLower()
+                x.AppUserId == user.Id
+                && x.Stock.Symbol.Equals(symbol, StringComparison.CurrentCultureIgnoreCase)
             );
 
             if (portfolioModel == null)
