@@ -1,5 +1,7 @@
 using api.Data;
+using api.Dtos.Comments;
 using api.interfaces;
+using api.Mappers;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,12 +38,14 @@ namespace api.Repository
 
         public async Task<List<Comment>> GetAllASync()
         {
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments.Include(u => u.AppUser).ToListAsync();
         }
 
         public async Task<Comment?> GetByIdAsync(int Id)
         {
-            return await _context.Comments.FindAsync(Id);
+            return await _context
+                .Comments.Include(u => u.AppUser)
+                .FirstOrDefaultAsync(c => c.Id == Id);
         }
 
         public async Task<Comment?> UpdateAsync(int id, Comment commentModel)

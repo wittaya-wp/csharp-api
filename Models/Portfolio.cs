@@ -11,7 +11,7 @@ namespace api.Models
     {
         public string AppUserId { get; set; } = string.Empty;
         public int StockId { get; set; }
-        public AppUser AppUser { get; set; }
-        public Stock Stock { get; set; }
+        public AppUser? AppUser { get; set; }
+        public Stock? Stock { get; set; }
     }
 }

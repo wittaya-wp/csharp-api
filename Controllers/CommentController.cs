@@ -1,7 +1,10 @@
 using api.Dtos.Comments;
+using api.Extensions;
 using api.interfaces;
 using api.Mappers;
+using api.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -13,19 +16,25 @@ namespace api.Controllers
     {
         private readonly ICommentRepository _commentRepo;
         private readonly IStockRepository _stockRepo;
+        private readonly UserManager<AppUser> _userManager;
 
-        public CommentController(ICommentRepository commentRepo, IStockRepository stockRepo)
+        public CommentController(
+            ICommentRepository commentRepo,
+            IStockRepository stockRepo,
+            UserManager<AppUser> userManager
+        )
         {
             _commentRepo = commentRepo;
             _stockRepo = stockRepo;
+            _userManager = userManager;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var comments = await _commentRepo.GetAllASync();
-            var commentDto = comments.Select(s => s.ToCommentDto());
-            return Ok(comments);
+            var commentsDto = comments.Select(s => s.ToCommentUserDto()).ToList();
+            return Ok(commentsDto);
         }
 
         [HttpGet("{id:int}")]
@@ -56,7 +65,15 @@ namespace api.Controllers
                 return BadRequest("Stock does not exist");
             }
 
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+            if (appUser == null)
+            {
+                return BadRequest("User not found");
+            }
+
             var commentModel = commentDto.ToCommentFromCreate(stockId);
+            commentModel.AppUserId = appUser.Id;
             await _commentRepo.CreateAsync(commentModel);
 
             return CreatedAtAction(

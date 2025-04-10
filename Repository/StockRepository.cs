@@ -40,13 +40,17 @@ namespace api.Repository
         {
             return await _context
                 .Stocks.Include(c => c.Comments)
+                .ThenInclude(a => a.AppUser)
                 .Select(s => s.ToStockDto())
                 .ToListAsync();
         }
 
         public async Task<List<Stock>> GetAllASync(QueryObject query)
         {
-            var stocks = _context.Stocks.Include(c => c.Comments).AsQueryable();
+            var stocks = _context
+                .Stocks.Include(c => c.Comments)
+                .ThenInclude(a => a.AppUser)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(query.CompanyName))
             {
@@ -77,6 +81,7 @@ namespace api.Repository
         {
             return await _context
                 .Stocks.Include(c => c.Comments)
+                .ThenInclude(a => a.AppUser)
                 .FirstOrDefaultAsync(ele => ele.Id == id);
         }
 

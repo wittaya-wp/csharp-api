@@ -14,6 +14,19 @@ namespace api.Mappers
                 Content = commentModel.Content,
                 CreatedOn = commentModel.CreatedOn,
                 StockId = commentModel.StockId,
+                CreatedBy = commentModel.AppUser?.UserName ?? "Unknown",
+            };
+        }
+
+        public static CommentUserDto ToCommentUserDto(this Comment commentModel)
+        {
+            return new CommentUserDto
+            {
+                Id = commentModel.Id,
+                Title = commentModel.Title,
+                Content = commentModel.Content,
+                CreatedOn = commentModel.CreatedOn,
+                User = AppUserMappers.ToAppUserDto(commentModel.AppUser),
             };
         }
 
